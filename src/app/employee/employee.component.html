@@ -1,0 +1,85 @@
+<div id=container>
+  <div id=content >
+  <p id="demo"></p>
+
+  <input type="text" [(ngModel)]= "sampletext" >
+
+  <div> {{sampletext}} </div>
+
+  <form id="employee" (ngSubmit)="onSubmit(employee)" #employee="ngForm" novalidate>
+ <fieldset>
+   <legend>Personal information:</legend>
+   <input type="hidden"  name="id" id="emp_id" [(ngModel)]="emp.id" >
+   First name:<br>
+   <input type="text" name="first_name" id="first_name"[(ngModel)]="emp.first_name" #empfname ="ngModel"  required minlength="4" appForbiddenName="bob">
+
+  <div *ngIf="empfname.invalid && (empfname.dirty || empfname.touched)"
+  class="alert alert-danger">
+      <div *ngIf="empfname.errors['required']">
+      Name is required.
+      </div>
+      <div *ngIf="empfname.errors['appForbiddenName']">
+        Name cannot be Bob.
+        </div>
+      <div *ngIf="empfname.errors['minlength']">
+      Name must be at least 4 characters long.
+      </div>
+
+
+</div>
+   <br>
+   Last name:<br>
+   <input type="text" name="last_name" id ="last_name" [(ngModel)]="emp.last_name" >
+   <br>
+   <div class="form-group">
+   <label>Email :</label><br>
+   <input type="text" id ="email" name="email" required email  #email="ngModel" [(ngModel)]="emp.email">
+   <span *ngIf="email.errors && email.errors['required']  && (email.dirty || email.touched)">Email is required</span>
+   <span *ngIf="email.errors && email.errors['email']  && email.touched">Email is invalid</span>
+
+  </div>
+   <br><br>{{employee.form.valid}} ---{{editFlag}}<br>
+      <button *ngIf = "!editFlag" type="submit" class="btn btn-default"
+              [disabled]="!employee.form.valid">Submit</button>
+      <button *ngIf="editFlag" type="button" (click)="onUpdate()" id="update" value="Update">Update</button>
+
+ </fieldset>
+
+
+</form>
+</div>
+
+
+    <app-on-changes [emp]="emp"  style="border: 1px solid black">
+    </app-on-changes>
+
+
+<div id="empolyeelist">
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr><th>Sr No.</th><th>First Name</th><th>Last Name</th><th>Email</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let employee of employees ; let i=index" (click)="onSelect(employee)"
+        [ngStyle] = " {backgroundColor: i % 2 === 0 ? 'yellow' :'green'}" >
+            <td>{{employee.id}}</td>
+            <td>
+                {{employee.first_name}}
+            </td>
+            <td>{{employee.last_name}}</td>
+            <td>{{employee.email}}</td>
+
+            <td><button class="btn btn-success btn-xs pull-left" (click)="onSelect(employee)">
+                Edit
+              </button>
+            <button class="btn btn-danger btn-xs pull-right" (click)="onDelete(employee)">
+                Delete
+              </button></td>
+          </tr>
+        </tbody>
+      </table>
+
+</div>
+
+
+</div>
